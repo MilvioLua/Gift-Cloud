@@ -812,7 +812,7 @@ class CardDavBackend implements BackendInterface, SyncSupport {
 
 			$query = "SELECT `uri`, `operation` FROM `*PREFIX*addressbookchanges` WHERE `synctoken` >= ? AND `synctoken` < ? AND `addressbookid` = ? ORDER BY `synctoken`";
 			if ($limit>0) {
-				$query .= " `LIMIT` " . (int)$limit;
+				$query .= " LIMIT " . (int)$limit;
 			}
 
 			// Fetching all changes
@@ -846,7 +846,11 @@ class CardDavBackend implements BackendInterface, SyncSupport {
 			}
 		} else {
 			// No synctoken supplied, this is the initial sync.
-			$query = "SELECT `uri` FROM `*PREFIX*cards` WHERE `addressbookid` = ?";
+			$query = "SELECT `uri` FROM `*PREFIX*cards` WHERE `addressbookid` = ? ORDER BY `synctoken`";
+			if ($limit>0) {
+				$query.= " LIMIT " . (int)$limit;
+			}
+
 			$stmt = $this->db->prepare($query);
 			$stmt->execute([$addressBookId]);
 
