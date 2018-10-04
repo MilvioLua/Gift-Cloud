@@ -810,24 +810,30 @@ class CardDavBackend implements BackendInterface, SyncSupport {
 
 		if ($syncToken) {
 
-			$query = "SELECT `uri`, `operation` FROM `*PREFIX*addressbookchanges` WHERE `synctoken` >= ? AND `synctoken` < ? AND `addressbookid` = ? ORDER BY `synctoken`";
+			$qb = $this->db->getQueryBuilder();
+			$qb->select('uri', 'operation')
+				->from('addressbookchanges')
+				->where($qb->expr()->gte('synctoken', $qb->createNamedParameter($syncToken)))
+				->andWhere($qb->expr()->lt('synctoken', $qb->createNamedParameter($currentToken)))
+				->andWhere($qb->expr()->eq('addressbookid', $qb->createNamedParameter($addressBookId)))
+				->orderBy('synctoken');
+
 			if ($limit>0) {
-				$query .= " LIMIT " . (int)$limit;
+				$qb->setMaxResults((int)$limit);
 			}
 
 			// Fetching all changes
-			$stmt = $this->db->prepare($query);
-			$stmt->execute([$syncToken, $currentToken, $addressBookId]);
+			$cursor = $qb->execute();
 
 			$changes = [];
 
 			// This loop ensures that any duplicates are overwritten, only the
 			// last change on a node is relevant.
-			while($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-
+			while($row = $cursor->fetch(\PDO::FETCH_ASSOC)) {
 				$changes[$row['uri']] = $row['operation'];
-
 			}
+
+			$cursor->closeCursor();
 
 			foreach($changes as $uri => $operation) {
 
@@ -846,15 +852,19 @@ class CardDavBackend implements BackendInterface, SyncSupport {
 			}
 		} else {
 			// No synctoken supplied, this is the initial sync.
-			$query = "SELECT `uri` FROM `*PREFIX*cards` WHERE `addressbookid` = ? ORDER BY `synctoken`";
+			$qb = $this->db->getQueryBuilder();
+			$qb->select('uri')
+				->from('cards')
+				->where($qb->expr()->eq('addressbookid', $qb->createNamedParameter($addressBookId)))
+				->orderBy('synctoken');
+
 			if ($limit>0) {
-				$query.= " LIMIT " . (int)$limit;
+				$qb->setMaxResults((int)$limit);
 			}
 
-			$stmt = $this->db->prepare($query);
-			$stmt->execute([$addressBookId]);
-
-			$result['added'] = $stmt->fetchAll(\PDO::FETCH_COLUMN);
+			$cursor = $qb->execute();
+			$result['added'] = $cursor->fetchAll(\PDO::FETCH_COLUMN);
+			$cursor->closeCursor();
 		}
 		return $result;
 	}
