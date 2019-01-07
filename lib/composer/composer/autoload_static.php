@@ -1048,6 +1048,7 @@ class ComposerStaticInit53792487c5a8370acc0b06b1a864ff4c
         'OC\\ServiceUnavailableException' => __DIR__ . '/../../..' . '/lib/private/ServiceUnavailableException.php',
         'OC\\Session\\CryptoSessionData' => __DIR__ . '/../../..' . '/lib/private/Session/CryptoSessionData.php',
         'OC\\Session\\CryptoWrapper' => __DIR__ . '/../../..' . '/lib/private/Session/CryptoWrapper.php',
+        'OC\\Session\\Handler\\Redis' => __DIR__ . '/../../..' . '/lib/private/Session/Handlers/Redis.php',
         'OC\\Session\\Internal' => __DIR__ . '/../../..' . '/lib/private/Session/Internal.php',
         'OC\\Session\\Memory' => __DIR__ . '/../../..' . '/lib/private/Session/Memory.php',
         'OC\\Session\\Session' => __DIR__ . '/../../..' . '/lib/private/Session/Session.php',

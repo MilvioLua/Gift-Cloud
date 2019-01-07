@@ -1018,6 +1018,7 @@ return array(
     'OC\\ServiceUnavailableException' => $baseDir . '/lib/private/ServiceUnavailableException.php',
     'OC\\Session\\CryptoSessionData' => $baseDir . '/lib/private/Session/CryptoSessionData.php',
     'OC\\Session\\CryptoWrapper' => $baseDir . '/lib/private/Session/CryptoWrapper.php',
+    'OC\\Session\\Handler\\Redis' => $baseDir . '/lib/private/Session/Handlers/Redis.php',
     'OC\\Session\\Internal' => $baseDir . '/lib/private/Session/Internal.php',
     'OC\\Session\\Memory' => $baseDir . '/lib/private/Session/Memory.php',
     'OC\\Session\\Session' => $baseDir . '/lib/private/Session/Session.php',

@@ -139,6 +139,9 @@ class OC {
 		}
 		self::$config = new \OC\Config(self::$configDir);
 
+		$redisSession = new \OC\Session\Handler\Redis();
+		\session_set_save_handler($redisSession, true);
+
 		OC::$SUBURI = str_replace("\\", "/", substr(realpath($_SERVER["SCRIPT_FILENAME"]), strlen(OC::$SERVERROOT)));
 		/**
 		 * FIXME: The following lines are required because we can't yet instantiate
