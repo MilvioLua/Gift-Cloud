@@ -1821,7 +1821,7 @@ class CalDavBackend extends AbstractBackend implements SyncSupport, Subscription
 						$qb->expr()->eq('calendarid', $qb->createNamedParameter($calendarId)),
 						$qb->expr()->eq('calendartype', $qb->createNamedParameter($calendarType))
 					)
-				)->orderBy('synctoken');
+				)->orderBy('id');
 
 			if ($limit > 0) {
 				$qb->setMaxResults((int)$limit);
