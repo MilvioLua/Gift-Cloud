@@ -858,7 +858,7 @@ class CardDavBackend implements BackendInterface, SyncSupport {
 				->where($qb->expr()->eq('addressbookid', $qb->createNamedParameter($addressBookId)))
 				->orderBy('id');
 
-			if ($limit>0) {
+			if ($limit > 0) {
 				$qb->setMaxResults((int)$limit);
 			}
 
