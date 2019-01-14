@@ -2341,7 +2341,7 @@ OC.set=function(name, value) {
  * Namespace for apps
  * @namespace OCA
  */
-window.OCA = {};
+window.OCA = window.OCA || {};
 
 /**
  * select a range in an input field

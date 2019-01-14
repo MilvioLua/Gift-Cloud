@@ -64,4 +64,16 @@ interface IAppContainer extends IContainer {
 	 * @since 8.2.0
 	 */
 	 public function registerCapability($serviceName);
+
+	/**
+	 * Register inline JS
+	 * @since 16.0.0
+	 */
+	 public function registerInlineJS(string $serviceName);
+
+	/**
+	 * Register inline CSS
+	 * @scine 16.0.0
+	 */
+	 public function registerInlineCSS(string $serviceName);
 }

@@ -102,6 +102,11 @@ function emit_script_loading_tags($obj) {
 	if (!empty($obj['inline_ocjs'])) {
 		emit_script_tag('', $obj['inline_ocjs']);
 	}
+	if (!empty($obj['jsfiles_inline'])) {
+		foreach ($obj['jsfiles_inline'] as $item) {
+			emit_script_tag('', $item);
+		}
+	}
 }
 
 /**

@@ -361,6 +361,18 @@ class DIContainer extends SimpleContainer implements IAppContainer {
 		});
 	}
 
+	public function registerInlineJS(string $serviceName) {
+		$this->query(\OC\InlineManager::class)->registerJS($this->getAppName(), function() use ($serviceName) {
+			return $this->query($serviceName);
+		});
+	}
+
+	public function registerInlineCSS(string $serviceName) {
+		$this->query(\OC\InlineManager::class)->registerCSS($this->getAppName(), function() use ($serviceName) {
+			return $this->query($serviceName);
+		});
+	}
+
 	/**
 	 * @param string $name
 	 * @return mixed

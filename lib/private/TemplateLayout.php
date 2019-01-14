@@ -153,7 +153,10 @@ class TemplateLayout extends \OC_Template {
 		// Add the js files
 		$jsFiles = self::findJavascriptFiles(\OC_Util::$scripts);
 		$this->assign('jsfiles', array());
+		$this->assign('jsfiles_inline', []);
 		if ($this->config->getSystemValue('installed', false) && $renderAs != 'error') {
+			/** @var InlineManager $inlineManager */
+			$inlineManager = \OC::$server->query(InlineManager::class);
 			if (\OC::$server->getContentSecurityPolicyNonceManager()->browserSupportsCspV3()) {
 				$jsConfigHelper = new JSConfigHelper(
 					\OC::$server->getL10N('lib', $localeLang ?: $lang),
@@ -168,6 +171,11 @@ class TemplateLayout extends \OC_Template {
 					\OC::$server->getCapabilitiesManager()
 				);
 				$this->assign('inline_ocjs', $jsConfigHelper->getConfig());
+
+				$inlineJs = $inlineManager->getInlineJS();
+				foreach ($inlineJs as $js) {
+					$this->append('jsfiles_inline', $js);
+				}
 			} else {
 				$this->append('jsfiles', \OC::$server->getURLGenerator()->linkToRoute('core.OCJS.getConfig', ['v' => self::$versionHash]));
 			}
