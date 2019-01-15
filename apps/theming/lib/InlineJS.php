@@ -43,8 +43,8 @@ class InlineJS implements IInline {
 
 	function getData(): string {
 		$cacheBusterValue = $this->config->getAppValue('theming', 'cachebuster', '0');
-		$responseJS = '(function() {
-	OCA.Theming = {
+		$responseJS = 'document.addEventListener(\'DOMContentLoaded\', function() {
+	window.OCA.Theming = {
 		name: ' . json_encode($this->themingDefaults->getName()) . ',
 		url: ' . json_encode($this->themingDefaults->getBaseUrl()) . ',
 		slogan: ' . json_encode($this->themingDefaults->getSlogan()) . ',
@@ -54,7 +54,7 @@ class InlineJS implements IInline {
 		inverted: ' . json_encode($this->util->invertTextColor($this->themingDefaults->getColorPrimary())) . ',
 		cacheBuster: ' . json_encode($cacheBusterValue) . '
 	};
-})();';
+});';
 		return $responseJS;
 	}
 }
