@@ -171,13 +171,12 @@ class TemplateLayout extends \OC_Template {
 					\OC::$server->getCapabilitiesManager()
 				);
 				$this->assign('inline_ocjs', $jsConfigHelper->getConfig());
-
-				$inlineJs = $inlineManager->getInlineJS();
-				foreach ($inlineJs as $js) {
-					$this->append('jsfiles_inline', $js);
-				}
 			} else {
 				$this->append('jsfiles', \OC::$server->getURLGenerator()->linkToRoute('core.OCJS.getConfig', ['v' => self::$versionHash]));
+			}
+			$inlineJs = $inlineManager->getInlineJS();
+			foreach ($inlineJs as $js) {
+				$this->append('jsfiles_inline', $js);
 			}
 		}
 		foreach($jsFiles as $info) {
