@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace OCA\Theming;
 
 use OCP\AppFramework\Http\Inline\IInline;
+use OCP\ICache;
 use OCP\IConfig;
 
 class InlineJS implements IInline {
@@ -34,15 +35,21 @@ class InlineJS implements IInline {
 	private $config;
 	/** @var Util */
 	private $util;
+	/** @var ICache */
+	private $cache;
 
-	public function __construct(IConfig $config, Util $util, ThemingDefaults $themingDefaults) {
+	public function __construct(IConfig $config, Util $util, ThemingDefaults $themingDefaults, ICache $cache) {
 		$this->themingDefaults = $themingDefaults;
 		$this->config = $config;
 		$this->util = $util;
+		$this->cache = $cache;
 	}
 
 	function getData(): string {
 		$cacheBusterValue = $this->config->getAppValue('theming', 'cachebuster', '0');
+		if ($this->cache->hasKey('theming-inline-' . $cacheBusterValue)) {
+			return $this->cache->get('theming-inline-' . $cacheBusterValue);
+		}
 		$responseJS = 'document.addEventListener(\'DOMContentLoaded\', function() {
 	window.OCA.Theming = {
 		name: ' . json_encode($this->themingDefaults->getName()) . ',
@@ -55,6 +62,8 @@ class InlineJS implements IInline {
 		cacheBuster: ' . json_encode($cacheBusterValue) . '
 	};
 });';
+		$this->cache->clear('theming-inline-');
+		$this->cache->set('theming-inline-' . $cacheBusterValue, $responseJS);
 		return $responseJS;
 	}
 }
