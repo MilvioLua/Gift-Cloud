@@ -48,13 +48,16 @@ import 'snap.js/dist/snap'
 import 'strengthify'
 import 'strengthify/strengthify.css'
 
+cssVars({
+	watch: true
+})
+
 window['_'] = _
 window['$'] = $
 window['autosize'] = autosize
 window['Backbone'] = Backbone
 window['Clipboard'] = ClipboardJS
 window['ClipboardJS'] = ClipboardJS
-window['cssVars'] = cssVars
 window['dav'] = dav
 window['DOMPurify'] = DOMPurify
 window['Handlebars'] = Handlebars

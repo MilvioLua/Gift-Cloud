@@ -1350,11 +1350,6 @@ function initCore() {
 		$('html').addClass('edge');
 	}
 
-	// css variables fallback for IE
-	if (msie > 0 || trident > 0) {
-		cssVars();
-	}
-
 	$(window).on('unload.main', function() {
 		OC._unloadCalled = true;
 	});
