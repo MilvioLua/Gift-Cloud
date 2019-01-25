@@ -350,7 +350,8 @@
 
 			if (options.scrollTo) {
 				this.$fileList.one('updated', function() {
-					self.scrollTo(options.scrollTo);
+					var open = true;
+					self.scrollTo(options.scrollTo, open);
 				});
 			}
 
@@ -2723,13 +2724,33 @@
 			this.$el.find('.mask').remove();
 			this.$table.removeClass('hidden');
 		},
-		scrollTo:function(file) {
+		scrollTo:function(file, open) {
 			if (!_.isArray(file)) {
 				file = [file];
 			}
 			if (file.length === 1) {
 				_.defer(function() {
 					this.showDetailsView(file[0]);
+
+					if (open) {
+						var $tr = this.findFileEl(file[0]);
+						var filename = $tr.attr('data-file');
+						this.fileActions.currentFile = $tr.find('td');
+						var mime = this.fileActions.getCurrentMimeType();
+						var type = this.fileActions.getCurrentType();
+						var permissions = this.fileActions.getCurrentPermissions();
+						var action = this.fileActions.get(mime, type, permissions)['Edit'];
+						if (action) {
+							// also set on global object for legacy apps
+							window.FileActions.currentFile = this.fileActions.currentFile;
+							action(filename, {
+								$file: $tr,
+								fileList: this,
+								fileActions: this.fileActions,
+								dir: $tr.attr('data-path') || this.getCurrentDirectory()
+							});
+						}
+					}
 				}.bind(this));
 			}
 			this.highlightFiles(file, function($tr) {
