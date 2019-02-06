@@ -829,6 +829,10 @@
 						var type = this.fileActions.getCurrentType();
 						var permissions = this.fileActions.getCurrentPermissions();
 						var action = this.fileActions.getDefault(mime,type, permissions);
+						if (typeof action === 'undefined' && type === 'file') {
+							var actions = this.fileActions.get(mime,type, permissions);
+							action = actions['Download'];
+						}
 						if (action) {
 							event.preventDefault();
 							// also set on global object for legacy apps
