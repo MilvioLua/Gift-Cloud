@@ -268,7 +268,7 @@ class Manager implements IManager {
 		}
 		if ($section === 'security') {
 			/** @var ISettings $form */
-			$form = $this->container->query(Personal\Security::class);
+			$form = $this->container->query(\OC\Settings\Settings\Personal\Security::class);
 			$forms[$form->getPriority()] = [$form];
 		}
 		if ($section === 'additional') {
