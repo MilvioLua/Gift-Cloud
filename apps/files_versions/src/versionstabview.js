@@ -128,11 +128,13 @@
 		},
 
 		template: function(data) {
-			return OCA.Versions.Templates['template'](data);
+			const template = require('./templates/template.handlebars');
+			return template(data);
 		},
 
 		itemTemplate: function(data) {
-			return OCA.Versions.Templates['item'](data);
+			const template = require('./templates/item.handlebars');
+			return template(data);
 		},
 
 		setFileInfo: function(fileInfo) {
