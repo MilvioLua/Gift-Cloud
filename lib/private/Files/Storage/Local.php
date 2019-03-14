@@ -165,7 +165,13 @@ class Local extends \OC\Files\Storage\Common {
 			$helper = new \OC\LargeFileHelper;
 			return $helper->getFileSize($fullPath);
 		}
-		return filesize($fullPath);
+		$result = filesize($fullPath);
+		if ($result === false) {
+			$exists = file_exists($fullPath);
+			$message = $exists ? "Failed to get size for $path even though file exists" : "Failed to get size for $path, file not found";
+			\OC::$server->getLogger()->logException(new \Exception($message), ['level' => ILogger::WARN]);
+		}
+		return $result;
 	}
 
 	public function isReadable($path) {
