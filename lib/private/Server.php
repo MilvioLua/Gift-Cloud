@@ -898,7 +898,8 @@ class Server extends ServerContainer implements IServerContainer {
 		});
 		$this->registerService(\OCP\Notification\IManager::class, function (Server $c) {
 			return new Manager(
-				$c->query(IValidator::class)
+				$c->query(IValidator::class),
+				$c->getLogger()
 			);
 		});
 		$this->registerAlias('NotificationManager', \OCP\Notification\IManager::class);
