@@ -1142,7 +1142,7 @@ function initCore() {
 		var usePercentualAppMenuLimit = 0.33;
 		var minAppsDesktop = 8;
 		var availableWidth =  headerWidth - $('#nextcloud').outerWidth() - (rightHeaderWidth > 210 ? rightHeaderWidth : 210)
-		var isMobile = $(window).width() < 768;
+		var isMobile = $(window).width() < 1024;
 		if (!isMobile) {
 			availableWidth = availableWidth * usePercentualAppMenuLimit;
 		}
@@ -1276,7 +1276,7 @@ function initCore() {
 		};
 
 		var toggleSnapperOnSize = function() {
-			if($(window).width() > 768) {
+			if($(window).width() > 1024) {
 				snapper.close();
 				snapper.disable();
 
