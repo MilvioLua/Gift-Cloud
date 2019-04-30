@@ -56,16 +56,7 @@ class Application extends App {
 		$eventDispatcher = $server->getEventDispatcher();
 
 		$notificationManager = $server->getNotificationManager();
-		$notificationManager->registerNotifier(function() use ($server) {
-			return new RemoveLinkSharesNotifier(
-				$server->getL10NFactory()
-			);
-		},  function() use ($server) {
-			return [
-				'id' => 'core',
-				'name' => 'core',
-			];
-		});
+		$notificationManager->registerNotifier(RemoveLinkSharesNotifier::class);
 
 		$eventDispatcher->addListener(IDBConnection::CHECK_MISSING_INDEXES_EVENT,
 			function(GenericEvent $event) use ($container) {
