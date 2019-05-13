@@ -239,7 +239,7 @@
 
 				channelList.push({
 					text: t('updatenotificaiton', 'Enterprise'),
-					longtext: t('updatenotification', 'For enterprise use. Provides always the latest patch level, but will not update to the next major release immediately. That update happens once Nextcloud GmbH has done additional hardening and testing for large-scale and mission-critical deployments. This channel is only available to customers and provides the Nextcloud Enterprise package. '),
+					longtext: t('updatenotification', 'For enterprise use. Provides always the latest patch level, but will not update to the next major release immediately. That update happens once Nextcloud GmbH has done additional hardening and testing for large-scale and mission-critical deployments. This channel is only available to customers and provides the Nextcloud Enterprise package.'),
 					icon: 'icon-star',
 					active: this.currentChannel === 'enterprise',
 					disabled: !this.hasValidSubscription,
