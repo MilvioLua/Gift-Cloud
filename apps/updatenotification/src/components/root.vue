@@ -115,6 +115,7 @@
 				versionIsEol: false,
 				downloadLink: '',
 				isNewVersionAvailable: false,
+				hasValidSubscription: false,
 				updateServerURL: '',
 				changelogURL: '',
 				whatsNewData: [],
@@ -237,6 +238,15 @@
 				let channelList = [];
 
 				channelList.push({
+					text: t('updatenotificaiton', 'Enterprise'),
+					longtext: t('updatenotification', 'For enterprise use. Provides always the latest patch level, but will not update to the next major release immediately. That update happens once Nextcloud GmbH has done additional hardening and testing for large-scale and mission-critical deployments. This channel is only available to customers and provides the Nextcloud Enterprise package. '),
+					icon: 'icon-star',
+					active: this.currentChannel === 'enterprise',
+					disabled: !this.hasValidSubscription,
+					action: this.changeReleaseChannelToEnterprise
+				});
+
+				channelList.push({
 					text: t('updatenotificaiton', 'Stable'),
 					longtext: t('updatenotification', 'The most recent stable version. It is suited for regular use and will always update to the latest major version.'),
 					icon: 'icon-checkmark',
@@ -317,6 +327,9 @@
 					form.submit();
 				}.bind(this));
 			},
+			changeReleaseChannelToEnterprise: function() {
+				this.changeReleaseChannel('enterprise')
+			},
 			changeReleaseChannelToStable: function() {
 				this.changeReleaseChannel('stable')
 			},
@@ -375,6 +388,7 @@
 			this.notifyGroups = data.notifyGroups;
 			this.isDefaultUpdateServerURL = data.isDefaultUpdateServerURL;
 			this.versionIsEol = data.versionIsEol;
+			this.hasValidSubscription = data.hasValidSubscription;
 			if(data.changes && data.changes.changelogURL) {
 				this.changelogURL = data.changes.changelogURL;
 			}
