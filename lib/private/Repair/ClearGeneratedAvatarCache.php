@@ -51,6 +51,7 @@ class ClearGeneratedAvatarCache implements IRepairStep {
 	 * @return boolean
 	 */
 	private function shouldRun() {
+		return true;
 		$versionFromBeforeUpdate = $this->config->getSystemValue('version', '0.0.0.0');
 
 		// was added to 15.0.0.4
