@@ -195,7 +195,7 @@
 					// do not open sidebar if permission is set and equal to 0
 					var permissions = parseInt(context.$file.data('share-permissions'), 10);
 					if (isNaN(permissions) || permissions > 0) {
-						fileList.showDetailsView(fileName, 'shareTabView');
+						fileList.showDetailsView(fileName, 'sharing');
 					}
 				},
 				render: function(actionSpec, isDefault, context) {
@@ -209,7 +209,7 @@
 				}
 			});
 
-			var shareTab = new OCA.Sharing.ShareTabView('shareTabView', {order: -20});
+			var shareTab = new OCA.Sharing.ShareTabView('sharing', {order: -20});
 			// detect changes and change the matching list entry
 			shareTab.on('sharesChanged', function(shareModel) {
 				var fileInfoModel = shareModel.fileInfoModel;
