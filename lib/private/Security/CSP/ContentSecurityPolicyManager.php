@@ -25,11 +25,20 @@ namespace OC\Security\CSP;
 
 use OCP\AppFramework\Http\ContentSecurityPolicy;
 use OCP\AppFramework\Http\EmptyContentSecurityPolicy;
+use OCP\Security\CSP\AddContentSecurityPolicyEvent;
 use OCP\Security\IContentSecurityPolicyManager;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class ContentSecurityPolicyManager implements IContentSecurityPolicyManager {
 	/** @var ContentSecurityPolicy[] */
 	private $policies = [];
+
+	/** @var EventDispatcherInterface */
+	private $dispatcher;
+
+	public function __construct(EventDispatcherInterface $dispatcher) {
+		$this->dispatcher = $dispatcher;
+	}
 
 	/** {@inheritdoc} */
 	public function addDefaultPolicy(EmptyContentSecurityPolicy $policy) {
@@ -43,6 +52,9 @@ class ContentSecurityPolicyManager implements IContentSecurityPolicyManager {
 	 * @return ContentSecurityPolicy
 	 */
 	public function getDefaultPolicy(): ContentSecurityPolicy {
+		$event = new AddContentSecurityPolicyEvent($this);
+		$this->dispatcher->dispatch(AddContentSecurityPolicyEvent::class, $event);
+
 		$defaultPolicy = new \OC\Security\CSP\ContentSecurityPolicy();
 		foreach($this->policies as $policy) {
 			$defaultPolicy = $this->mergePolicies($defaultPolicy, $policy);
