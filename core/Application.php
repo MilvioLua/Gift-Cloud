@@ -28,12 +28,17 @@
 
 namespace OC\Core;
 
+use OC\Authentication\Events\RemoteWipeFinished;
+use OC\Authentication\Events\RemoteWipeStarted;
+use OC\Authentication\Listeners\RemoteWipeActivityListener;
+use OC\Authentication\Listeners\RemoteWipeNotificationsListener;
 use OC\Authentication\Notifications\Notifier as AuthenticationNotifier;
 use OC\Core\Notification\RemoveLinkSharesNotifier;
 use OC\DB\MissingIndexInformation;
 use OC\DB\SchemaWrapper;
 use OCP\AppFramework\App;
 use OCP\IDBConnection;
+use OCP\IServerContainer;
 use OCP\Util;
 use Symfony\Component\EventDispatcher\GenericEvent;
 
@@ -155,5 +160,40 @@ class Application extends App {
 				}
 			}
 		);
+
+		/**
+		 * @todo create an interface for event listeners
+		 * @todo create a reusable abstraction that proxies a lazy event listener to a DI'd class
+		 */
+		$eventDispatcher->addListener(RemoteWipeStarted::class, function(RemoteWipeStarted $event) {
+			/** @var IServerContainer $container */
+			$container = $this->getContainer();
+
+			$listeners = [
+				$container->query(RemoteWipeActivityListener::class),
+				$container->query(RemoteWipeNotificationsListener::class),
+			];
+
+			foreach ($listeners as $listener) {
+				$listener->handle($event);
+			}
+		});
+		/**
+		 * @todo create an interface for event listeners
+		 * @todo create a reusable abstraction that proxies a lazy event listener to a DI'd class
+		 */
+		$eventDispatcher->addListener(RemoteWipeFinished::class, function(RemoteWipeFinished $event) {
+			/** @var IServerContainer $container */
+			$container = $this->getContainer();
+
+			$listeners = [
+				$container->query(RemoteWipeActivityListener::class),
+				$container->query(RemoteWipeNotificationsListener::class),
+			];
+
+			foreach ($listeners as $listener) {
+				$listener->handle($event);
+			}
+		});
 	}
 }
