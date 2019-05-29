@@ -32,6 +32,7 @@ use Leafo\ScssPhp\Compiler;
 use Leafo\ScssPhp\Exception\ParserException;
 use Leafo\ScssPhp\Formatter\Crunched;
 use Leafo\ScssPhp\Formatter\Expanded;
+use OC\Memcache\NullCache;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\Files\IAppData;
 use OCP\Files\NotFoundException;
@@ -42,6 +43,7 @@ use OCP\ICache;
 use OCP\ICacheFactory;
 use OCP\IConfig;
 use OCP\ILogger;
+use OCP\IMemcache;
 use OCP\IURLGenerator;
 use OC\Files\AppData\Factory;
 use OC\Template\IconsCacher;
@@ -84,6 +86,9 @@ class SCSSCacher {
 	/** @var ITimeFactory */
 	private $timeFactory;
 
+	/** @var IMemcache */
+	private $lockingCache;
+
 	/**
 	 * @param ILogger $logger
 	 * @param Factory $appDataFactory
@@ -113,6 +118,11 @@ class SCSSCacher {
 		$this->cacheFactory = $cacheFactory;
 		$this->depsCache    = $cacheFactory->createDistributed('SCSS-' . md5($this->urlGenerator->getBaseUrl()));
 		$this->isCachedCache = $cacheFactory->createLocal('SCSS-cached-' . md5($this->urlGenerator->getBaseUrl()));
+		$lockingCache = $cacheFactory->createDistributed('SCSS-locks-' . md5($this->urlGenerator->getBaseUrl()));
+		if (!($lockingCache instanceof IMemcache)) {
+			$lockingCache = new NullCache();
+		}
+		$this->lockingCache = $lockingCache;
 		$this->iconsCacher = $iconsCacher;
 		$this->timeFactory = $timeFactory;
 	}
@@ -150,7 +160,19 @@ class SCSSCacher {
 			$folder = $this->appData->newFolder($app);
 		}
 
-		$cached = $this->cache($path, $fileNameCSS, $fileNameSCSS, $folder, $webDir);
+		if (!$this->lockingCache->add($path, 'locked!', 120)) {
+			// Could not lock just fail
+			return false;
+		}
+
+		try {
+			$cached = $this->cache($path, $fileNameCSS, $fileNameSCSS, $folder, $webDir);
+		} catch (\Exception $e) {
+			$this->lockingCache->remove($path);
+			throw $e;
+		}
+
+		$this->lockingCache->remove($path);
 
 		// Inject icons vars css if any
 		if ($this->iconsCacher->getCachedCSS() && $this->iconsCacher->getCachedCSS()->getSize() > 0) {
