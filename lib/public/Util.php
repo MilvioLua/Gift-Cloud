@@ -76,7 +76,11 @@ class Util {
 	public static function getVersion() {
 		return \OC_Util::getVersion();
 	}
-	
+
+	public static function hasExtendedSupport(): bool {
+		return \OC::$server->getConfig()->getSystemValueBool('extendedSupport', false);
+	}
+
 	/**
 	 * Set current update channel
 	 * @param string $channel
@@ -85,7 +89,7 @@ class Util {
 	public static function setChannel($channel) {
 		\OC::$server->getConfig()->setSystemValue('updater.release.channel', $channel);
 	}
-	
+
 	/**
 	 * Get current update channel
 	 * @return string
@@ -708,7 +712,7 @@ class Util {
 	public static function needUpgrade() {
 		if (!isset(self::$needUpgradeCache)) {
 			self::$needUpgradeCache=\OC_Util::needUpgrade(\OC::$server->getSystemConfig());
-		}		
+		}
 		return self::$needUpgradeCache;
 	}
 }
