@@ -80,4 +80,17 @@ interface IUserSession {
 	 * @since 8.0.0
 	 */
 	public function isLoggedIn();
+
+	/**
+	 * get getImpersonatingUserID
+	 * @return string | null
+	 * @since 17.0.0
+	 */
+	public function getImpersonatingUserID();
+
+	/**
+	 * set setImpersonatingUserID
+	 * @since 17.0.0
+	 */
+	public function setImpersonatingUserID(bool $useCurrentUser = true);
 }
