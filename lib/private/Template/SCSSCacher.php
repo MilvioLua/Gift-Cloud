@@ -147,10 +147,7 @@ class SCSSCacher {
 
 		if (!$this->variablesChanged() && $this->isCached($fileNameCSS, $app)) {
 			// Inject icons vars css if any
-			if ($this->iconsCacher->getCachedCSS() && $this->iconsCacher->getCachedCSS()->getSize() > 0) {
-				$this->iconsCacher->injectCss();
-			}
-			return true;
+			return $this->injectCssVariablesIfAny();
 		}
 
 		try {
@@ -161,7 +158,15 @@ class SCSSCacher {
 		}
 
 		if (!$this->lockingCache->add($path, 'locked!', 120)) {
-			// Could not lock just fail
+			$retry = 0;
+			while ($retry < 10) {
+				sleep(1);
+				if (!$this->variablesChanged() && $this->isCached($fileNameCSS, $app)) {
+					// Inject icons vars css if any
+					return $this->injectCssVariablesIfAny();
+				}
+				$retry++;
+			}
 			return false;
 		}
 
@@ -470,5 +475,18 @@ class SCSSCacher {
 		}
 
 		return $webRoot . substr($path, strlen($serverRoot));
+	}
+
+	/**
+	 * Add the icons css cache in the header if needed 
+	 *
+	 * @return boolean true
+	 */
+	private function injectCssVariablesIfAny() {
+		// Inject icons vars css if any
+		if ($this->iconsCacher->getCachedCSS() && $this->iconsCacher->getCachedCSS()->getSize() > 0) {
+			$this->iconsCacher->injectCss();
+		}
+		return true;
 	}
 }
