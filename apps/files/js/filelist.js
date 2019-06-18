@@ -1803,7 +1803,7 @@
 		 * @return permission value as integer
 		 */
 		getDirectoryPermissions: function() {
-			return parseInt(this.$el.find('#permissions').val(), 10);
+			return this.dirInfo ? this.dirInfo.permissions : parseInt(this.$el.find('#permissions').val(), 10);
 		},
 		/**
 		 * Changes the current directory and reload the file list.
