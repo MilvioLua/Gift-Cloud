@@ -316,7 +316,7 @@ class SCSSCacher {
 				'@import "functions.scss";' .
 				'@import "' . $fileNameSCSS . '";');
 		} catch (ParserException $e) {
-			$this->logger->error($e, ['app' => 'core']);
+			$this->logger->error($e->getMessage(), ['app' => 'core']);
 
 			return false;
 		}
@@ -385,7 +385,7 @@ class SCSSCacher {
 			$scss->compile($variables);
 			$this->injectedVariables = $variables;
 		} catch (ParserException $e) {
-			$this->logger->error($e, ['app' => 'core']);
+			$this->logger->error($e->getMessage(), ['app' => 'core']);
 		}
 
 		return $variables;
