@@ -327,7 +327,7 @@ class SCSSCacher {
 				'@import "functions.scss";' .
 				'@import "' . $fileNameSCSS . '";');
 		} catch (ParserException $e) {
-			$this->logger->error($e->getMessage(), ['app' => 'core']);
+			$this->logger->logException($e, ['app' => 'core']);
 
 			return false;
 		}
